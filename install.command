@@ -27,4 +27,4 @@ echo "✓ 已複製到 $TARGET"
 "$TARGET/Contents/MacOS/ZhuyinDict" --install
 open "$TARGET"
 echo
-echo "完成。在任何 App 反白文字 → 右鍵 → 服務 → 加入ㄅㄆㄇ字詞庫。"
+echo "完成。在任何 App 反白文字 → 右鍵 → 服務 → + ㄅㄆㄇ字詞庫。"

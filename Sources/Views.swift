@@ -212,7 +212,7 @@ struct ListZone: View {
                     }
                     .buttonStyle(.secondaryGlass)
                 }
-                Text("\(rows.count) 筆・在任何 App 反白文字，按右鍵 › 服務 › 加入ㄅㄆㄇ字詞庫")
+                Text("\(rows.count) 筆・在任何 App 反白文字，按右鍵 › 服務 › + ㄅㄆㄇ字詞庫")
                     .font(.system(size: 12))
                     .foregroundStyle(.secondary)
             }
@@ -517,7 +517,7 @@ struct InstallView: View {
                     }
                     .buttonStyle(.secondaryGlass)
                 }
-                Text("在「鍵盤 › 鍵盤快速鍵 › 服務 › 文字」找到「加入ㄅㄆㄇ字詞庫」，就能指定按鍵。")
+                Text("在「鍵盤 › 鍵盤快速鍵 › 服務 › 文字」找到「+ ㄅㄆㄇ字詞庫」，就能指定按鍵。")
                     .font(.system(size: 12))
                     .foregroundStyle(.secondary)
             }

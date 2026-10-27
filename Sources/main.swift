@@ -56,7 +56,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         NSApp.activate(ignoringOtherApps: true)
     }
 
-    /// Info.plist 的 NSServices 指到這裡：反白文字 › 右鍵 › 服務 › 加入ㄅㄆㄇ字詞庫。
+    /// Info.plist 的 NSServices 指到這裡：反白文字 › 右鍵 › 服務 › + ㄅㄆㄇ字詞庫。
     @objc func addWord(_ pasteboard: NSPasteboard, userData: String?,
                        error: AutoreleasingUnsafeMutablePointer<NSString?>) {
         serviceInvoked = true

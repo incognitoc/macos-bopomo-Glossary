@@ -32,7 +32,7 @@
 			<key>NSMenuItem</key>
 			<dict>
 				<key>default</key>
-				<string>加入ㄅㄆㄇ字詞庫</string>
+				<string>+ ㄅㄆㄇ字詞庫</string>
 			</dict>
 			<key>NSMessage</key>
 			<string>addWord</string>
