@@ -23,7 +23,14 @@ struct GlassButtonStyle: ButtonStyle {
             .foregroundStyle(foreground)
             .padding(.horizontal, 16)
             .padding(.vertical, 8)
-            .background(GlassBackground(cornerRadius: 16, tint: tint))
+            .background {
+                // 舊 SDK 下系統對玻璃的 tint 很淡，品牌色另外鋪一層才看得清楚白字。
+                ZStack {
+                    GlassBackground(cornerRadius: 16)
+                    if let tint { Capsule().fill(tint.opacity(0.92)) }
+                }
+            }
+            .fixedSize()
             .contentShape(Capsule())
             .scaleEffect(configuration.isPressed ? 0.96 : 1)
             .animation(.spring(response: 0.25, dampingFraction: 0.7), value: configuration.isPressed)
@@ -173,8 +180,10 @@ struct ListZone: View {
         VStack(spacing: 0) {
             VStack(alignment: .leading, spacing: 8) {
                 HStack(spacing: 8) {
-                    Text(model.filter.title).font(.system(size: 20, weight: .semibold))
-                    Spacer()
+                    Text(model.filter.title)
+                        .font(.system(size: 20, weight: .semibold))
+                        .fixedSize()
+                    Spacer(minLength: 16)
                     HStack(spacing: 8) {
                         Image(systemName: "magnifyingglass").foregroundStyle(.secondary)
                         TextField("搜尋詞或注音", text: $model.search)
@@ -184,7 +193,7 @@ struct ListZone: View {
                     .padding(.horizontal, 16)
                     .padding(.vertical, 8)
                     .background(GlassBackground(cornerRadius: 16))
-                    .frame(width: 200)
+                    .frame(minWidth: 168, maxWidth: 200)
                     Menu("匯入／匯出") {
                         Button("匯入 plist 或 CSV…") { model.importFile() }
                         Divider()

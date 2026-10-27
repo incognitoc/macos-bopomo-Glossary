@@ -127,13 +127,19 @@ final class ReplacementStore {
         typealias Function = @convention(c) (AnyObject, Selector, NSArray, NSArray, Handler) -> Void
         let function = unsafeBitCast(client.method(for: selector), to: Function.self)
 
+        let resend: ([(phrase: String, shortcut: String)]) -> Void = { missing in
+            let entries = missing.map { makeEntry(phrase: $0.phrase, shortcut: $0.shortcut) }
+            let ignore: Handler = { _ in }
+            function(client, selector, entries as NSArray, [] as NSArray, ignore)
+        }
+
         // 系統即使成功也會回傳 Code=0 的 error，所以 Code=0 時改用重新讀取資料庫來確認結果。
         let handler: Handler = { result in
             DispatchQueue.main.async {
                 if let error = result as? NSError, error.code != 0 {
                     completion(StoreError.failed(Self.message(for: error)))
                 } else {
-                    self.verify(add: add, remove: remove, attempt: 0, completion: completion)
+                    self.verify(add: add, remove: remove, attempt: 0, resend: resend, completion: completion)
                 }
             }
         }
@@ -152,6 +158,7 @@ final class ReplacementStore {
     }
 
     private func verify(add: [(phrase: String, shortcut: String)], remove: [Entry], attempt: Int,
+                        resend: @escaping ([(phrase: String, shortcut: String)]) -> Void,
                         completion: @escaping (Error?) -> Void) {
         // 新增會立即寫入資料庫，刪除要等一到數秒才落地。等刪除也落地再回報，
         // 否則緊接著加回同一組詞與縮寫時，會被還在排隊的刪除一起刪掉。
@@ -160,11 +167,15 @@ final class ReplacementStore {
         let addKeys = Set(add.map { Entry.makeKey(shortcut: $0.shortcut, phrase: $0.phrase) })
         let added = addKeys.isSubset(of: keys)
         let removed = remove.allSatisfy { !keys.contains($0.key) || addKeys.contains($0.key) }
+        // 剛刪掉的同一組詞與縮寫在幾秒內加回去，系統有時會直接忽略；刪除落地後補送一次。
+        if !added && removed && attempt == 25 {
+            resend(add.filter { !keys.contains(Entry.makeKey(shortcut: $0.shortcut, phrase: $0.phrase)) })
+        }
         if added && (removed || attempt >= 50) {
             completion(nil)
         } else if attempt < 50 {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                self.verify(add: add, remove: remove, attempt: attempt + 1, completion: completion)
+                self.verify(add: add, remove: remove, attempt: attempt + 1, resend: resend, completion: completion)
             }
         } else {
             completion(StoreError.failed("系統沒有完成這次寫入，請稍後再試"))
