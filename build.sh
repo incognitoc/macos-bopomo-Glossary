@@ -1,9 +1,9 @@
 #!/bin/bash
-# 建置 build/注音字詞.app（只需要 Xcode Command Line Tools）。
+# 建置 build/ㄅㄆㄇ字詞庫.app（只需要 Xcode Command Line Tools）。
 set -euo pipefail
 cd "$(dirname "$0")"
 
-APP="build/注音字詞.app"
+APP="build/ㄅㄆㄇ字詞庫.app"
 rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources" build/tmp
 

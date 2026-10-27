@@ -5,13 +5,18 @@ enum UninstallMode: String, CaseIterable {
 }
 
 enum Installer {
-    static let bundleName = "注音字詞.app"
+    static let bundleName = "ㄅㄆㄇ字詞庫.app"
     static let lsregister = "/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister"
     static let pbs = "/System/Library/CoreServices/pbs"
 
     static var installedURL: URL {
         FileManager.default.homeDirectoryForCurrentUser
             .appendingPathComponent("Applications").appendingPathComponent(bundleName)
+    }
+
+    /// 舊版名稱「注音字詞」的安裝位置，安裝或卸載時一併移除。
+    static var legacyURL: URL {
+        installedURL.deletingLastPathComponent().appendingPathComponent("注音字詞.app")
     }
 
     static var isInApplications: Bool {
@@ -50,6 +55,10 @@ enum Installer {
             try fm.removeItem(at: installedURL)
         }
         try fm.copyItem(at: Bundle.main.bundleURL, to: installedURL)
+        if fm.fileExists(atPath: legacyURL.path) {
+            run(lsregister, ["-u", legacyURL.path])
+            try? fm.removeItem(at: legacyURL)
+        }
         registerServices(app: installedURL)
         NSWorkspace.shared.openApplication(at: installedURL, configuration: .init()) { _, _ in
             DispatchQueue.main.async { NSApp.terminate(nil) }
@@ -94,9 +103,9 @@ enum Installer {
     /// 結束後由背景 shell 移除 App 與記錄；備份資料夾保留。
     static func removeAppAndQuit() {
         var lines = ["sleep 1"]
-        if FileManager.default.fileExists(atPath: installedURL.path) {
-            lines.append("'\(lsregister)' -u '\(installedURL.path)'")
-            lines.append("rm -rf '\(installedURL.path)'")
+        for app in [installedURL, legacyURL] where FileManager.default.fileExists(atPath: app.path) {
+            lines.append("'\(lsregister)' -u '\(app.path)'")
+            lines.append("rm -rf '\(app.path)'")
         }
         lines.append("rm -f '\(Ledger.url.path)'")
         lines.append("'\(pbs)' -update")

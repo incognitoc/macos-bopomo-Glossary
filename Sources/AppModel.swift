@@ -245,7 +245,7 @@ final class AppModel: ObservableObject {
 
     func exportCSV() {
         let panel = NSSavePanel()
-        panel.nameFieldStringValue = "注音字詞.csv"
+        panel.nameFieldStringValue = "ㄅㄆㄇ字詞庫.csv"
         panel.allowedContentTypes = [.commaSeparatedText]
         guard panel.runModal() == .OK, let url = panel.url else { return }
         func quote(_ s: String) -> String { "\"\(s.replacingOccurrences(of: "\"", with: "\"\""))\"" }

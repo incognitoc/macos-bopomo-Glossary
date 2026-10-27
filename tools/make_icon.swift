@@ -1,6 +1,6 @@
 import AppKit
 
-// 產生 AppIcon.iconset：品牌色圓角方塊上一個白色「注」。
+// 產生 AppIcon.iconset：品牌色圓角方塊上一個白色「ㄅ」。
 let output = URL(fileURLWithPath: CommandLine.arguments[1])
 try? FileManager.default.createDirectory(at: output, withIntermediateDirectories: true)
 
@@ -25,7 +25,7 @@ for (name, pixels) in sizes {
     NSBezierPath(roundedRect: rect, xRadius: rect.width * 0.22, yRadius: rect.width * 0.22).fill()
 
     let font = NSFont.systemFont(ofSize: rect.height * 0.56, weight: .semibold)
-    let text = NSAttributedString(string: "注", attributes: [.font: font, .foregroundColor: NSColor.white])
+    let text = NSAttributedString(string: "ㄅ", attributes: [.font: font, .foregroundColor: NSColor.white])
     let textSize = text.size()
     text.draw(at: NSPoint(x: rect.midX - textSize.width / 2, y: rect.midY - textSize.height / 2))
 

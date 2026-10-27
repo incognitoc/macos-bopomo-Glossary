@@ -9,9 +9,9 @@
 	<key>CFBundleIdentifier</key>
 	<string>com.raphael.zhuyindict</string>
 	<key>CFBundleName</key>
-	<string>注音字詞</string>
+	<string>ㄅㄆㄇ字詞庫</string>
 	<key>CFBundleDisplayName</key>
-	<string>注音字詞</string>
+	<string>ㄅㄆㄇ字詞庫</string>
 	<key>CFBundleIconFile</key>
 	<string>AppIcon</string>
 	<key>CFBundlePackageType</key>
@@ -32,12 +32,12 @@
 			<key>NSMenuItem</key>
 			<dict>
 				<key>default</key>
-				<string>加入注音字詞</string>
+				<string>加入ㄅㄆㄇ字詞庫</string>
 			</dict>
 			<key>NSMessage</key>
 			<string>addWord</string>
 			<key>NSPortName</key>
-			<string>注音字詞</string>
+			<string>ㄅㄆㄇ字詞庫</string>
 			<key>NSSendTypes</key>
 			<array>
 				<string>public.utf8-plain-text</string>

@@ -2,10 +2,10 @@
 # 雙擊卸載：處理字詞 → 移除 App 與右鍵服務。備份資料夾會保留。
 set -euo pipefail
 
-TARGET="$HOME/Applications/注音字詞.app"
+TARGET="$HOME/Applications/ㄅㄆㄇ字詞庫.app"
 BIN="$TARGET/Contents/MacOS/ZhuyinDict"
 
-echo "=== 卸載注音字詞 ==="
+echo "=== 卸載ㄅㄆㄇ字詞庫 ==="
 if [ ! -x "$BIN" ]; then
   echo "找不到 $TARGET，可能已經卸載了。"
   exit 0
@@ -22,10 +22,10 @@ case "${choice:-1}" in
   *) MODE=keep ;;
 esac
 
-osascript -e 'tell application "注音字詞" to quit' >/dev/null 2>&1 || true
+osascript -e 'tell application "ㄅㄆㄇ字詞庫" to quit' >/dev/null 2>&1 || true
 "$BIN" --uninstall "$MODE"
 
-rm -rf "$TARGET"
+rm -rf "$TARGET" "$HOME/Applications/注音字詞.app"
 /System/Library/CoreServices/pbs -update
 echo "✓ 已移除 App 與右鍵服務"
 echo "備份保留在：$HOME/Library/Application Support/ZhuyinDict/Backups"

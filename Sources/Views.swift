@@ -113,8 +113,8 @@ struct Sidebar: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             VStack(alignment: .leading, spacing: 8) {
-                Text("Zhuyin Words").font(.system(size: 20, weight: .semibold))
-                Text("注音字詞・讓常用字不再被忘記").font(.system(size: 12)).foregroundStyle(.secondary)
+                Text("ㄅㄆㄇ字詞庫").font(.system(size: 20, weight: .semibold))
+                Text("讓常用字不再被忘記").font(.system(size: 12)).foregroundStyle(.secondary)
             }
             .padding(16)
             .padding(.top, 32)
@@ -212,7 +212,7 @@ struct ListZone: View {
                     }
                     .buttonStyle(.secondaryGlass)
                 }
-                Text("\(rows.count) 筆・在任何 App 反白文字，按右鍵 › 服務 › 加入注音字詞")
+                Text("\(rows.count) 筆・在任何 App 反白文字，按右鍵 › 服務 › 加入ㄅㄆㄇ字詞庫")
                     .font(.system(size: 12))
                     .foregroundStyle(.secondary)
             }
@@ -435,7 +435,7 @@ struct AddWordPanel: View {
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 32)
             } else {
-                PageHeader(title: "加入注音字詞", subtitle: "確認詞和縮寫，按加入就會寫進系統的文字替代。")
+                PageHeader(title: "加入ㄅㄆㄇ字詞庫", subtitle: "確認詞和縮寫，按加入就會寫進系統的文字替代。")
                     .padding(.bottom, 24)
                 WordForm(model: model, draft: draft, excluding: nil, phraseFocus: $phraseFocused)
                 if let banner = model.banner, banner.isError {
@@ -484,7 +484,7 @@ struct InstallView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            PageHeader(title: "安裝與卸載", subtitle: "檢查安裝狀態，或把注音字詞從這台 Mac 移除。")
+            PageHeader(title: "安裝與卸載", subtitle: "檢查安裝狀態，或把ㄅㄆㄇ字詞庫從這台 Mac 移除。")
                 .padding(.bottom, 24)
 
             Text("安裝狀態").font(.system(size: 14, weight: .semibold)).padding(.bottom, 8)
@@ -517,7 +517,7 @@ struct InstallView: View {
                     }
                     .buttonStyle(.secondaryGlass)
                 }
-                Text("在「鍵盤 › 鍵盤快速鍵 › 服務 › 文字」找到「加入注音字詞」，就能指定按鍵。")
+                Text("在「鍵盤 › 鍵盤快速鍵 › 服務 › 文字」找到「加入ㄅㄆㄇ字詞庫」，就能指定按鍵。")
                     .font(.system(size: 12))
                     .foregroundStyle(.secondary)
             }
@@ -559,7 +559,7 @@ struct InstallView: View {
         .padding(24)
         .frame(width: 480)
         .onAppear { serviceOK = Installer.serviceRegistered() }
-        .confirmationDialog("確定要卸載注音字詞？", isPresented: $confirming) {
+        .confirmationDialog("確定要卸載ㄅㄆㄇ字詞庫？", isPresented: $confirming) {
             Button("卸載", role: .destructive, action: uninstall)
             Button("取消", role: .cancel) {}
         } message: {

@@ -38,7 +38,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 contentRect: NSRect(x: 0, y: 0, width: 1040, height: 640),
                 styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
                 backing: .buffered, defer: false)
-            window.title = "注音字詞"
+            window.title = "ㄅㄆㄇ字詞庫"
             window.titleVisibility = .hidden
             window.titlebarAppearsTransparent = true
             window.isReleasedWhenClosed = false
@@ -56,7 +56,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         NSApp.activate(ignoringOtherApps: true)
     }
 
-    /// Info.plist 的 NSServices 指到這裡：反白文字 › 右鍵 › 服務 › 加入注音字詞。
+    /// Info.plist 的 NSServices 指到這裡：反白文字 › 右鍵 › 服務 › 加入ㄅㄆㄇ字詞庫。
     @objc func addWord(_ pasteboard: NSPasteboard, userData: String?,
                        error: AutoreleasingUnsafeMutablePointer<NSString?>) {
         serviceInvoked = true
@@ -77,7 +77,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             contentRect: NSRect(x: 0, y: 0, width: 360, height: 320),
             styleMask: [.titled, .closable, .fullSizeContentView],
             backing: .buffered, defer: false)
-        panel.title = "注音字詞"
+        panel.title = "ㄅㄆㄇ字詞庫"
         panel.titleVisibility = .hidden
         panel.titlebarAppearsTransparent = true
         // 整個小視窗就是一片玻璃。
@@ -112,11 +112,11 @@ enum MainMenu {
         let main = NSMenu()
 
         let app = NSMenu()
-        app.addItem(withTitle: "關於注音字詞", action: #selector(NSApplication.orderFrontStandardAboutPanel(_:)), keyEquivalent: "")
+        app.addItem(withTitle: "關於ㄅㄆㄇ字詞庫", action: #selector(NSApplication.orderFrontStandardAboutPanel(_:)), keyEquivalent: "")
         app.addItem(.separator())
-        app.addItem(withTitle: "隱藏注音字詞", action: #selector(NSApplication.hide(_:)), keyEquivalent: "h")
-        app.addItem(withTitle: "結束注音字詞", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
-        add(app, to: main, title: "注音字詞")
+        app.addItem(withTitle: "隱藏ㄅㄆㄇ字詞庫", action: #selector(NSApplication.hide(_:)), keyEquivalent: "h")
+        app.addItem(withTitle: "結束ㄅㄆㄇ字詞庫", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        add(app, to: main, title: "ㄅㄆㄇ字詞庫")
 
         let edit = NSMenu(title: "編輯")
         edit.addItem(withTitle: "還原", action: Selector(("undo:")), keyEquivalent: "z")
