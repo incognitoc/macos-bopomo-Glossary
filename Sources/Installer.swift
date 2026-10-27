@@ -47,22 +47,56 @@ enum Installer {
         run(pbs, ["-dump"]).contains("NSMessage = addWord;")
     }
 
-    /// 從建置資料夾執行時，把自己複製到 ~/Applications 並改由那份啟動。
+    static let justInstalledFlag = "--just-installed"
+
+    /// 從 DMG 或建置資料夾打開時自動安裝；開發時可設 ZHUYINDICT_NO_AUTOINSTALL=1 略過。
+    static var shouldAutoInstall: Bool {
+        !isInApplications && ProcessInfo.processInfo.environment["ZHUYINDICT_NO_AUTOINSTALL"] == nil
+    }
+
+    /// 把自己複製到 ~/Applications 並改由那份啟動；從 DMG 打開的話，結束後退出 DMG。
     static func installCopyAndRelaunch() throws {
         let fm = FileManager.default
+        // 更新時先結束已安裝、正在執行的舊版。
+        for app in NSRunningApplication.runningApplications(withBundleIdentifier: Bundle.main.bundleIdentifier ?? "")
+        where app != .current {
+            app.terminate()
+        }
         try fm.createDirectory(at: installedURL.deletingLastPathComponent(), withIntermediateDirectories: true)
         if fm.fileExists(atPath: installedURL.path) {
             try fm.removeItem(at: installedURL)
         }
         try fm.copyItem(at: Bundle.main.bundleURL, to: installedURL)
+        // 使用者已在 DMG 那份按過「強制打開」，安裝的那份不再重問。
+        run("/usr/bin/xattr", ["-dr", "com.apple.quarantine", installedURL.path])
         if fm.fileExists(atPath: legacyURL.path) {
             run(lsregister, ["-u", legacyURL.path])
             try? fm.removeItem(at: legacyURL)
         }
         registerServices(app: installedURL)
-        NSWorkspace.shared.openApplication(at: installedURL, configuration: .init()) { _, _ in
+        ejectDiskImageLater()
+
+        let configuration = NSWorkspace.OpenConfiguration()
+        configuration.arguments = [justInstalledFlag]
+        configuration.createsNewApplicationInstance = true
+        NSWorkspace.shared.openApplication(at: installedURL, configuration: configuration) { _, _ in
             DispatchQueue.main.async { NSApp.terminate(nil) }
         }
+    }
+
+    /// 找出裝著本 App 的 DMG 磁碟區，等這個行程結束後退出。
+    /// 從 DMG 打開的 App 可能被系統搬到隨機路徑執行，所以直接到 /Volumes 找。
+    private static func ejectDiskImageLater() {
+        let volumes = FileManager.default.mountedVolumeURLs(
+            includingResourceValuesForKeys: [.volumeIsRemovableKey], options: [.skipHiddenVolumes]) ?? []
+        guard let volume = volumes.first(where: {
+            $0.path.hasPrefix("/Volumes/")
+                && FileManager.default.fileExists(atPath: $0.appendingPathComponent(bundleName).path)
+        }) else { return }
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/bin/sh")
+        process.arguments = ["-c", "sleep 3; /usr/bin/hdiutil detach \"$0\" -quiet", volume.path]
+        try? process.run()
     }
 
     /// 卸載時處理字詞資料；App 本身由 `removeAppAndQuit` 或 uninstall.command 移除。

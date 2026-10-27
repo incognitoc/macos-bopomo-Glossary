@@ -16,6 +16,20 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var serviceInvoked = false
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        if Installer.shouldAutoInstall {
+            do {
+                try Installer.installCopyAndRelaunch()
+                return
+            } catch {
+                let alert = NSAlert()
+                alert.messageText = "無法安裝到應用程式資料夾"
+                alert.informativeText = error.localizedDescription
+                alert.runModal()
+            }
+        }
+        if arguments.contains(Installer.justInstalledFlag) {
+            model.flash("已安裝。在任何 App 反白文字，按右鍵 › 服務 › + ㄅㄆㄇ字詞庫")
+        }
         NSApp.mainMenu = MainMenu.build()
         NSApp.servicesProvider = self
         NSUpdateDynamicServices()

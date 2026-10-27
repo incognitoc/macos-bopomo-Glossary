@@ -13,10 +13,22 @@ macOS 的注音輸入法常記不住常用的詞。這個 App 把常用詞寫進
 
 ## 安裝與卸載
 
+### 用 DMG 安裝（一般使用）
+
+1. 打開 `ㄅㄆㄇ字詞庫-<版本>.dmg`，雙擊裡面的 App
+2. App 會自動複製到 `~/Applications`、建立安裝前備份、註冊右鍵服務，然後退出 DMG
+3. 卸載：在 App 的「安裝與卸載…」裡操作
+
+這個 App 沒有經過 Apple 公證，第一次打開會出現「無法驗證」的警告。請按「完成」，到「系統設定 › 隱私權與安全性」往下找到 ㄅㄆㄇ字詞庫，按「強制打開」。只需要做一次。
+
+### 從原始碼安裝（開發用）
+
 需要 Xcode Command Line Tools。
 
-- 安裝：雙擊 `install.command`（建置後安裝到 `~/Applications`）
-- 卸載：雙擊 `uninstall.command`，或在 App 的「安裝與卸載…」裡操作
+- 打包 DMG：`./make_dmg.sh`，產出 `build/ㄅㄆㄇ字詞庫-<版本>.dmg`
+- 安裝：`bash install.command`（建置後安裝到 `~/Applications`）
+- 卸載：`bash uninstall.command`
+- 從 `build/` 直接打開 App 也會自動安裝；不想安裝時設環境變數 `ZHUYINDICT_NO_AUTOINSTALL=1`
 
 備份存放在 `~/Library/Application Support/ZhuyinDict/Backups`，卸載後仍會保留。
 
